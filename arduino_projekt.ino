@@ -7,12 +7,16 @@ const int B = 4275;               // B value of the thermistor
 const int R0 = 100000;    
 const int pinTempSensor = A0;
 
+
+const int pinFotoSensor = A2;
+
+
 #define ONE_WIRE_BUS 2
 
 #define red 3
 #define green 5
 #define blue 6
- 
+ int refreshTemp = 0;
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Ustawienie adresu ukladu na 0x27
 
 OneWire oneWire(ONE_WIRE_BUS); 
@@ -38,7 +42,7 @@ void setup()
   
   Serial.begin(9600);
 }
- int refreshTemp = 0;
+ 
 void loop() 
 {
   //red temp
@@ -50,11 +54,35 @@ void loop()
           float R = 1023.0/a-1.0;
           R = R0*R;
 
-      float temperature = 1.0/(log(R/R0)/B+1/298.15)-273.15; // convert to temperature via datasheet
+          float temperature = 1.0/(log(R/R0)/B+1/298.15)-273.15; // convert to temperature via datasheet
       
           String tempStr =  "Temp: ";
           tempStr += temperature;
           tempStr += " C";
+          
+          int foto = analogRead(pinFotoSensor);      
+          foto = foto/100;
+          Serial.print(foto);
+          String fotoStr ="";
+          switch(foto){
+            case 1:
+            case 2:
+            case 3:
+              fotoStr = "dark";
+              break;
+           case 4:
+           case 5:
+              fotoStr = "normal";
+              break;
+           case 6:
+           case 7:
+              fotoStr = "light";
+              break;
+           default:
+              fotoStr= "?";
+          }
+          lcd.setCursor(0,1);
+          lcd.print(fotoStr);
           lcd.setCursor(0,0); 
           lcd.print(tempStr);
           refreshTemp =0;
