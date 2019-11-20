@@ -1,6 +1,11 @@
 #include <OneWire.h>
 #include <Wire.h>   // standardowa biblioteka Arduino
 #include <LiquidCrystal_I2C.h> // dolaczenie pobranej biblioteki I2C dla LCD
+#include <math.h>
+
+const int B = 4275;               // B value of the thermistor
+const int R0 = 100000;    
+const int pinTempSensor = A0;
 
 #define ONE_WIRE_BUS 2
 
@@ -33,10 +38,29 @@ void setup()
   
   Serial.begin(9600);
 }
- 
+ int refreshTemp = 0;
 void loop() 
 {
+  //red temp
 
+  
+    if(refreshTemp > 24){
+            int a = analogRead(pinTempSensor);
+
+          float R = 1023.0/a-1.0;
+          R = R0*R;
+
+      float temperature = 1.0/(log(R/R0)/B+1/298.15)-273.15; // convert to temperature via datasheet
+      
+          String tempStr =  "Temp: ";
+          tempStr += temperature;
+          tempStr += " C";
+          lcd.setCursor(0,0); 
+          lcd.print(tempStr);
+          refreshTemp =0;
+    }
+  refreshTemp += 1;
+  //end of read
   if (digitalRead(9) == HIGH) {  // Button A pressed
     digitalWrite(red, HIGH);
     lcd.setCursor(0,1); 
