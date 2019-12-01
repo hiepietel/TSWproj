@@ -48,8 +48,6 @@ void setup()
   delay(500);
   lcd.setCursor(0,1); //Ustawienie kursora w pozycji 0,0 (drugi wiersz, pierwsza kolumna)
   lcd.print("Feel free to use");
-  
-  Serial.begin(9600);
 }
 void ClearDisplay(bool delayy){
   lcd.setCursor(0,0); // Ustawienie kursora w pozycji 0,0 (pierwszy wiersz, pierwsza kolumna)
@@ -99,21 +97,18 @@ void loop()
         LEDon(false, true, false, false);
         lcd.setCursor(0,1); 
         lcd.print("A: RED enabled");
-        Serial.print("RED enabled");
        delay(5);
       }
         if (digitalRead(11) == HIGH) {  // Button B pressed
         LEDon(false, false, true, false);
         lcd.setCursor(0,1); 
         lcd.print("B: GREEN enabled");
-        Serial.print("GREEN enabled");
        delay(5);
       }
         if (digitalRead(10) == HIGH) {  // Button C pressed
         LEDon(false, false, false, true);
         lcd.setCursor(0,1); 
         lcd.print("C: BLUE enabled");
-        Serial.print("BLUE enabled");
        delay(5);
       }
       if (digitalRead(8) == HIGH) {  // Button D pressed
@@ -121,7 +116,6 @@ void loop()
 
         lcd.setCursor(0,1); 
         lcd.print("D: COLORS disabled");
-        Serial.print("COLORS disabled");
        delay(5);
       }
   }
@@ -141,7 +135,6 @@ void loop()
           tempStr += " C";
           
           int foto = analogRead(pinFotoSensor);      
-          Serial.print(foto);
           String fotoStr ="Light: ";
             fotoStr += foto;
           SetDisplay(false, false, tempStr, fotoStr);
