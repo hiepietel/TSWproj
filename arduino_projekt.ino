@@ -17,6 +17,9 @@ const int pinFotoSensor = A2;
 #define green 5
 #define blue 6
 
+#define stateOne 12 //temp
+#define stateTwo 13 //LedControl
+
 //temp variales
 int state = 0;
 // state == 1 led zapala sie gdy temp lub swiatlo przekrocza wartosci progowe
@@ -37,6 +40,11 @@ void setup()
   pinMode(red, OUTPUT); // Piny, podłączone do diody jako wyjścia
   pinMode(green, OUTPUT);
   pinMode(blue, OUTPUT);
+  //Pin info
+  pinMode(stateOne, OUTPUT);
+  pinMode(stateTwo, OUTPUT);
+  digitalWrite(stateOne, LOW);
+  digitalWrite(stateTwo, LOW);
   digitalWrite(red, LOW);
   digitalWrite(green, LOW);
   digitalWrite(blue, LOW);// Świecimy tylko na zielono
@@ -83,16 +91,21 @@ void loop()
 {
   if((digitalRead(9) == HIGH) && (digitalRead(10) == HIGH)) //A i C
   {  
+    digitalWrite(stateOne, LOW);
+	digitalWrite(stateTwo, HIGH);
     state =2;      
     SetDisplay(true, true, "Switched to:", "LED control :D");
   }
   if((digitalRead(11) == HIGH) && (digitalRead(8) == HIGH)) //B i D
     {
       state = 1;
+	    digitalWrite(stateOne, HIGH);
+		digitalWrite(stateTwo, LOW);
       SetDisplay(true,true,  "Switched to:", "TEMP & FOTO");
     }
   if (state == 2)
   {
+	  
          if (digitalRead(9) == HIGH) {  // Button A pressed
         LEDon(false, true, false, false);
         lcd.setCursor(0,1); 
